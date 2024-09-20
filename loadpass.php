@@ -5,7 +5,7 @@
 
 by Luke Jozwiak
 
-Last Update: 27 Mar 2017 */
+Last Update: 16 May 2017 */
 
 setlocale (LC_MONETARY, 'en_US');
 require 'Outside_Web_Root/config.php';
@@ -77,36 +77,41 @@ else
 
 // Open DB connection (using Microsoft's PDO driver [SQLSRV32/php_pdo_sqlsrv_56_ts.dll] against PHP 5.6)
 $conn = new PDO("sqlsrv:Server=$server;Database=$db", "$username", "$password");
-$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+$conn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
 // AUTHENTICATION
 
-// Query DB to get the email address associated with the order
-$sql = "SELECT  Customer.Email
+/* Query DB to get the email address associated with the order.  We're gonna use prepared statements for
+all of our variable-containing queries to prevent SQL injection. */
+$statement = $conn -> prepare ("SELECT Customer.Email
 
-		FROM Orders
-		INNER JOIN CustContacts Customer
-		ON Orders.ContactID = Customer.CustContactID
+								FROM Orders
+								INNER JOIN CustContacts Customer
+								ON Orders.ContactID = Customer.CustContactID
 
-		WHERE Orders.OrderID = $OrderID";
+								WHERE Orders.OrderID = :OrderID");
 
 // Debug: Show SQL query
 if ($debug == 1)
-	echo "<em>", $sql, "</em><br><br>";
-
-// Load SQL results into an array
-foreach ($conn->query ($sql) as $row)
 {
-	if ($debug == 1)
-	{
-		print_r ($row);
-		echo "<br><br>";
-	}
+	echo "<em>";
+	var_dump ($statement);
+	echo "</em><br><br><span style=\"color: blue;\">", "\$OrderID = ", $OrderID, "</span></p><p>";;
+}
+
+$statement -> execute (array ('OrderID' => $OrderID));
+$result = $statement -> fetch ();
+
+// Debug: Show query result
+if ($debug == 1)
+{
+	print_r ($result);
+	echo "<br><br>";
 }
 
 // Authentication Test: Compare email address submitted against the DB's email address for this order
-if ($Email == $row ['Email'])
+if ($Email == $result ['Email'])
 {
 	$Authorized = 1;
 
@@ -134,7 +139,7 @@ if ($Authorized = 1)
 		echo "<em>", $sql, "</em><br><br>";
 
 	// Load SQL results into an array
-	foreach ($conn->query ($sql) as $row)
+	foreach ($conn -> query ($sql) as $row)
 	{
 		if ($debug == 1)
 			print_r ($row);
@@ -154,29 +159,35 @@ if ($Authorized = 1)
 	// RETRIEVAL OF TICKET DATA
 
 	// Query DB to get ticket data from Order #
-	$sql = "SELECT	Ticket.OrderNo,
-			Item.Name,
-			Event.StartDateTime,
-			Ticket.VisualID,
-			Customer.FirstName,
-			Customer.LastName
+	$statement = $conn -> prepare ("SELECT	Ticket.OrderNo,
+											Item.Name,
+											Event.StartDateTime,
+											Ticket.VisualID,
+											Customer.FirstName,
+											Customer.LastName
 
-			FROM Tickets Ticket
-			FULL JOIN CustContacts Customer
-			ON Ticket.ContactID = Customer.CustContactID
-			FULL JOIN RMEvents Event
-			ON Ticket.EventNo = Event.EventID
-			INNER JOIN Items Item
-			ON Ticket.PLU = Item.PLU
+											FROM Tickets Ticket
+											FULL JOIN CustContacts Customer
+											ON Ticket.ContactID = Customer.CustContactID
+											FULL JOIN RMEvents Event
+											ON Ticket.EventNo = Event.EventID
+											INNER JOIN Items Item
+											ON Ticket.PLU = Item.PLU
 
-			WHERE Ticket.OrderNo = $OrderID and Ticket.Status = 0";
+											WHERE Ticket.OrderNo = :OrderID and Ticket.Status = 0");
 
 	// Debug: Show SQL query
 	if ($debug == 1)
-		echo "<em>", $sql, "</em><br><br>";
+	{
+		echo "<em>";
+		var_dump ($statement);
+		echo "</em><br><br>";
+	}
+
+	$statement -> execute (array ('OrderID' => $OrderID));
 
 	// Load SQL results into an array
-	foreach ($conn->query ($sql) as $row)
+	while ($row = $statement -> fetch ())
 	{
 		$_SESSION ['TicketQuantity']++;	// Keep track of the number of tickets (rows) in this order.
 

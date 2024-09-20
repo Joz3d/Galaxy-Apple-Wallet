@@ -1,6 +1,6 @@
-Galaxy Apple Wallet v1.0
+Galaxy Apple Wallet v1.1
 by Luke Jozwiak (lukejoz at the most popular email service)
-Last Updated: 22 Mar 2017
+Last Updated: 16 May 2017
 
 1. About
 2. Requirements
