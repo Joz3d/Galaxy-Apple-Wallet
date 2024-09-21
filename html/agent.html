@@ -1,0 +1,9 @@
+<p id="Result">Hi</p>
+<script>
+if (/mac/i.test(navigator.userAgent))
+	document.getElementById('Result').innerHTML = "Apple Device!";
+else
+	document.getElementById('Result').innerHTML = "Non-Apple Device";
+
+//document.getElementById('Result').innerHTML = navigator.userAgent;
+</script>

@@ -1,8 +1,23 @@
-Galaxy Apple Wallet v1.1 - May 16th, 2017
------------------------------------------
+2.0 - May 23rd, 2018
+--------------------
++ Rewritten to utilize eGalaxy API
++ Professional Tickets Download Page
++ Live Streaming Stats Dashboard
+
+
+1.11 - July 16th, 2017
+----------------------
++ Verified compatible with PHP 7; no longer limited to PHP 5.6
++ Changed default PDO driver to dblib instead of sqlsrv
++ Added error reporting for initial DB connection failures
++ Added more debugging info
+
+
+1.1 - May 16th, 2017
+--------------------
 + SQL Queries are now prepared statements (SQL Injection protection)
 
 
-Galaxy Apple Wallet v1.0 - April 3rd, 2017
-------------------------------------------
+1.0 - April 3rd, 2017
+---------------------
 Initial Release

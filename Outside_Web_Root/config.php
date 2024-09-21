@@ -1,9 +1,24 @@
 <?php
+// GENERAL SETUP
+
+// Dashboard Credentials
+$stats_pass = '##########';
+$web_stats_link = 'awstats/awstats.pl?config=wallet';
+$week_start_day = 'sunday';
+$logname = 'wallet.log';
+
+// Galaxy Access Method: Set to either api or db
+$conn_method = 'api';
+
+// API Credentials
+$SOAP_URL = 'https://your.egalaxy.server.com';
+$API_SourceID = 'Website';
+
 // DB Credentials
 $server = 'server.address.com\SQLinstance';
 $db = 'Database_Name';
 $username = 'gxuser';
-$password = 'staging';
+$password = '##########';
 
 // Apple Credentials
 $PassTypeID = 'pass.com.yourco.attraction';

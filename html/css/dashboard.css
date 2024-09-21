@@ -1,0 +1,264 @@
+/* Galaxy Apple Wallet Dashboard CSS
+   by Luke Jozwiak
+   Last Update: 28 Dec 2017 */
+
+body
+{
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.header
+{
+	height: 75px;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	background-color: #4CAF50;
+}
+
+.title
+{
+	float: left;
+	padding: 18px;
+	font-size: 180%;
+	color: white;
+}
+
+.conninfo
+{
+	float: right;
+	height: 20px;
+	width: 150px;
+	margin-top: 22px;
+	margin-right: 15px;
+	font-size: 85%;
+	border: 1px solid white;
+	border-radius: 7px;
+	padding: 2px;
+	background-color: white;
+	text-align: center;
+}
+
+.settings
+{
+	float: right;
+	margin-top: 80px;
+	margin-right: 10px;
+}
+
+.StatsTable
+{
+	position: relative;
+	top: 72px;
+	width: 80%;
+}
+
+.StatsTD
+{
+	padding: 20px;
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 200%;
+	background-color: #f9f9f9;
+	line-height: 150%;
+}
+
+.StatsTD:hover
+{
+	background-color: #e6ffe6;
+}
+
+.LogTD
+{
+	padding: 0px;
+	margin: 0px;
+}
+
+#log
+{
+	font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+	position: relative;
+	top: 125px;
+	width: 700px;
+	height: 200px;
+	padding: 10px 13px;
+	background-color: #fafaef;
+	border: 2px groove darkgreen;
+	border-radius: 10px;
+	border-spacing: 0px;
+}
+
+#log:hover
+{
+	background-color: beige;
+	border: 2px groove black;
+}
+
+#NewLine
+{
+	padding: 0px;
+	margin: 0px;
+}
+
+.footer
+{
+	position: relative;
+	top: 125px;
+	width: 600px;
+	padding: 10px 10px;
+	font-size: 90%;
+}
+
+.links
+{
+	display: inline;
+	padding: 0px 10px 0px 10px;
+}
+
+a:link
+{
+	color: black;
+}
+
+a:visited
+{
+	color: black;
+}
+
+.blink
+{
+	animation: blink-animation 1.3s steps(3, start) infinite;
+}
+
+.UpdateLog
+{
+	animation: FlashLog 8s;
+}
+
+.UpdateAllTime
+{
+	animation: FlashAllTime 3s;
+}
+
+.UpdateToday
+{
+	animation: FlashToday 3s;
+}
+
+.UpdateThisWeek
+{
+	animation: FlashThisWeek 3s;
+}
+
+.UpdateThisMonth
+{
+	animation: FlashThisMonth 3s;
+}
+
+.UpdateThisYear
+{
+	animation: FlashThisYear 3s;
+}
+
+@keyframes blink-animation
+{
+	to
+	{
+		visibility: hidden;
+	}
+}
+
+@keyframes FlashAllTime
+{
+    from
+        { background-color: #4CAF50; }
+    to
+        { background-color: #f9f9f9; }
+}
+
+@keyframes FlashToday
+{
+    from
+        { background-color: #6fbf72; }
+    to
+        { background-color: #f9f9f9; }
+}
+
+@keyframes FlashThisWeek
+{
+    from
+        { background-color: #93cf96; }
+    to
+        { background-color: #f9f9f9; }
+}
+
+@keyframes FlashThisMonth
+{
+    from
+        { background-color: #b7dfb9; }
+    to
+        { background-color: #f9f9f9; }
+}
+
+@keyframes FlashThisYear
+{
+    from
+        { background-color: #dbefdc; }
+    to
+        { background-color: #f9f9f9; }
+}
+
+@keyframes FlashLog
+{
+	from
+		{ background-color: #4CAF50; }
+	to
+		{ background-color: #fafaef; }
+}
+
+@media only screen and (max-device-width: 667px)	/* Responsive: Smartphones */
+{
+	.StatsTable
+	{
+		width: 100%;
+	}
+
+	.StatsTD
+	{
+		font-size: 250%;
+	}
+
+	.title
+	{
+		margin-left: 10px;
+		padding: 8px;
+		font-size: 300%;
+	}
+
+	.conninfo
+	{
+		height: 40px;
+	    width: 300px;
+	    margin-top: 15px;
+	    margin-right: 10px;
+	    font-size: 180%;
+	}
+
+	.settings
+	{
+		display: none;		/* Because phones don't play sounds anyway */
+	}
+
+	#log
+	{
+		font-size: 140%;
+		width: 100%;
+	}
+
+	.footer
+	{
+		font-size: 250%;
+	}
+}

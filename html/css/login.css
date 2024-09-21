@@ -1,0 +1,87 @@
+/* Galaxy Apple Wallet Dashboard Login CSS
+   by Luke Jozwiak
+   Last Update: 28 Dec 2017 */
+
+.login
+{
+	position: fixed;
+	width: 40%;
+	top: 20%;
+	left: 30%;
+	border: 3px solid Green;
+	border-radius: 15px 50px;
+	background: #4CAF50;
+	padding: 10px;
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+	color: white;
+}
+
+input[type=password]
+{
+	width: 45%;
+	padding: 3px;
+	border: 2px solid green;
+	border-radius: 10px;
+	background-color: #e6ffe6;
+	background-image: url('../gfx/Webpage/keys.png');
+	background-position: 10px;
+	background-repeat: no-repeat;
+	padding-left: 50px;
+	outline: none;
+	transition: 0.5s;
+	font-size: 200%;
+}
+
+input[type=password]:hover
+{
+    border: 2px solid black;
+}
+
+input[type=password]:focus
+{
+	border: 2px solid black;
+}
+
+input[type=submit]
+{
+	background-color: #e6ffe6;
+	border: none;
+	outline: none;
+	color: black;
+	padding: 8px 30px;
+	margin: 4px 2px;
+	border-radius: 10px;
+	font-size: 110%;
+	cursor: pointer;
+	transition: all 1s ease 0s;
+}
+
+input[type=submit]:hover
+{
+	background: #ffffcc;
+}
+
+@media only screen and (max-device-width: 667px) /* Responsive: Smartphones */
+{
+	.login
+	{
+	    position: relative;
+	    width: 85%;
+	    top: 10%;
+	    left: 5%;
+	    border-radius: 22px 50px;
+	    padding: 30px;
+	    font-size: 200%;
+	}
+
+	input[type=password]
+	{
+	    width: 70%;
+    }
+
+	input[type=submit]
+	{
+	    font-size: 150%;
+	}
+}
