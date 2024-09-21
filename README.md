@@ -21,7 +21,7 @@ In more detail, this is accomplished by receiving an order number and email addr
 
 Requirements
 ------------
-#### PHP (5.6 or 7)
+#### PHP (5.6 or 7
 
 If utilizing the direct-to-database connection model (don't), then you additionally need:
 
@@ -91,9 +91,9 @@ Security Guidelines
 
 2. If you are for some reason using the deprecated direct-db model:
 
-	a. Use the same user that _eGalaxy_ (the _Galaxy_ Webstore) uses to connect to the database.
+	A. Use the same user that _eGalaxy_ (the _Galaxy_ Webstore) uses to connect to the database.
 
-	b. Create a new database user specifically for this application, who is restricted to connecting to the database from only the web server hosting this application.  This user should have READ-ONLY access to the following tables and columns:
+	B. Create a new database user specifically for this application, who is restricted to connecting to the database from only the web server hosting this application.  This user should have READ-ONLY access to the following tables and columns:
 
 		Orders (ContactID, OrderID)
 		CustContacts (Email, CustContactID, FirstName, LastName)
