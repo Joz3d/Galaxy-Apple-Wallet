@@ -21,7 +21,7 @@ In more detail, this is accomplished by receiving an order number and email addr
 
 Requirements
 ------------
-#### PHP (5.6 or 7
+#### PHP (5.6 or 7)
 
 If utilizing the direct-to-database connection model (don't), then you additionally need:
 
