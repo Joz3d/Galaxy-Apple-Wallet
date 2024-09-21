@@ -26,7 +26,7 @@ Requirements
 If utilizing the direct-to-database connection model (don't), then you additionally need:
 
 \+ PHP support for connecting to MSSQL Server 
-* This app by default uses the PDO_DBLIB driver (pdo_dblib.so)
+* This app by default uses the PDO_DBLIB driver (`pdo_dblib.so`)
 * If you are running this PHP on Windows, you will need to instead use the Microsoft PHP Driver for SQL Server (SqlSrv).  You will need to modify the code accordingly ~line 80 in `loadpass.php`
 
 #### Apple Credentials
@@ -70,9 +70,9 @@ Installation Instructions
 
 5. Provide URL to `loadpass.php` to your:
 
-A. Web development team so that they may place a link to download Apple Wallet tickets on the order confirmation page.
+	A. Web development team so that they may place a link to download Apple Wallet tickets on the order confirmation page.
 	   
-B. Your _Galaxy_ Sys Admin, who will then update the _Galaxy_ confirmation email template to create an Apple Wallet link.  This link will provide the Order ID and Email Address to `loadpass.php`, and should look like:
+	B. Your _Galaxy_ Sys Admin, who will then update the _Galaxy_ confirmation email template to create an Apple Wallet link.  This link will provide the Order ID and Email Address to `loadpass.php`, and should look like:
 
 		<a href="http://domain/loadpass.php?o=<% write (Order.GetField ('OrderID')) %>&e=
 		<% write (Order.GetField ('Contact.Email')) %>">
@@ -85,7 +85,7 @@ Security Guidelines
 -------------------
 1. _eGalaxy_ and pass signing credentials are stored in `config.php`.  This file should be stored OUTSIDE of web root, so that it is not otherwise accessible by/via the web server.  `config.php` and/or its folder may also be restricted to be accessible only by the web server.  Please update the path to `config.php` in `loadpass.php` and `getpass.php`, updating the line:
 
-	require '../Outside_Web_Root/config.php';
+		require '../Outside_Web_Root/config.php';
 
    ...near the top of `loadpass.php` and `getpass.php`
 
