@@ -24,6 +24,7 @@ Requirements
 #### PHP (5.6 or 7)
 
 If utilizing the direct-to-database connection model (don't), then you additionally need:
+
 \+ PHP support for connecting to MSSQL Server 
 * This app by default uses the PDO_DBLIB driver (pdo_dblib.so)
 * If you are running this PHP on Windows, you will need to instead use the Microsoft PHP Driver for SQL Server (SqlSrv).  You will need to modify the code accordingly ~line 80 in `loadpass.php`
