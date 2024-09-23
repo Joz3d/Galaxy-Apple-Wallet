@@ -3,7 +3,7 @@
 // by Luke Jozwiak
 // Last Update: 2 May 2018
 
-require '../creds/config.php';
+require '../Outside_Web_Root/config.php';
 session_start ();
 
 // Show the login page first, and if they enter the right password, reload as the dashboard page

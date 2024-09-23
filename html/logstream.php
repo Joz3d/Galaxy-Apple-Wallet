@@ -6,7 +6,7 @@
 header ('Content-Type: text/event-stream');	// Set the header for streaming
 header ('Cache-Control: no-cache');
 
-require '../creds/config.php';
+require '../Outside_Web_Root/config.php';
 
 session_start ();
 
