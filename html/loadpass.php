@@ -5,7 +5,7 @@
 
 by Luke Jozwiak
 
-Last Update: 3 May 2018 */
+Last Update: 26 Jul 2022 */
 
 setlocale (LC_MONETARY, 'en_US');
 require '../Outside_Web_Root/config.php';
@@ -26,7 +26,7 @@ list ($OrderID, $Email) = ParamCheck ($_GET["o"], $_GET["e"]);
 // Test Galaxy Connection
 if ($conn_method == "api")
 {
-	$XML_Post = BuildXML ("QueryServerStatus", $API_SourceID, $OrderID, "null");
+	$XML_Post = BuildXML ("QueryServerStatus", $API_SourceID, $eGalaxy_Username, $eGalaxy_Password, $OrderID, "null");
 	$POST_Headers = SetPOSTHeaders ($XML_Post);
 	$XML_Object = APIQuery ($SOAP_URL, $POST_Headers, $XML_Post);		// Query API for server status
 
@@ -47,7 +47,7 @@ else
 // Authenticate and look up data
 if ($conn_method == "api")
 {
-	$XML_Post = BuildXML ("QueryOrder", $API_SourceID, $OrderID, "null");
+	$XML_Post = BuildXML ("QueryOrder", $API_SourceID, $eGalaxy_Username, $eGalaxy_Password, $OrderID, "null");
 	$POST_Headers = SetPOSTHeaders ($XML_Post);
 	$XML_Object = APIQuery ($SOAP_URL, $POST_Headers, $XML_Post);		// Query API for order information
 
@@ -55,9 +55,10 @@ if ($conn_method == "api")
 	$TicketStack = ParseXML ($XML_Object, $TimeZone, $Today, $Email, "null");
 
 	NoIssuedTicketsCheck ();						// If there aren't any issued tickets on the order, exit
+	UnsupportedTicketsCheck ($UnsupportedTickets, $TicketStack);	// If there are unsupported tickets, exit
 
 	// Filter out invalid tickets by checking the status of each VID
-	$XML_Post = BuildXML ("QueryTicket", $API_SourceID, "null", $TicketStack);
+	$XML_Post = BuildXML ("QueryTicket", $API_SourceID, $eGalaxy_Username, $eGalaxy_Password, "null", $TicketStack);
 	$POST_Headers = SetPOSTHeaders ($XML_Post);
 	$XML_Object = APIQuery ($SOAP_URL, $POST_Headers, $XML_Post);		// Query API for ticket status
 
@@ -82,7 +83,7 @@ elseif ($conn_method == "db")
 
 $TicketStack = Expire ($TicketStack, $Today);	// Filter out Expired Tickets (events that are over)
 $TicketStack = StackCheck ($TicketStack);		// Check if $TicketStack still has anything in it
-$TicketStack = CheckNames ($TicketStack);		// Check for blank names
+$TicketStack = CheckNames ($TicketStack, $GuestNames);	// Check for blank names; append ticket numbers if guest names are disabled
 WebLink ($TicketStack);							// Place web links
 
 $_SESSION['AllTickets'] = $TicketStack;			// Load Ticket Stack as a session variable to hand off
@@ -140,7 +141,7 @@ function ParamCheck ($OrderID, $Email)
 
 
 // Create XML POST Request
-function BuildXML ($API_MessageType, $API_SourceID, $OrderID, $TicketStack)
+function BuildXML ($API_MessageType, $API_SourceID, $eGalaxy_Username, $eGalaxy_Password, $OrderID, $TicketStack)
 {
 	++$GLOBALS['API_MessageID'];
 	date_default_timezone_set ("America/Los_Angeles");
@@ -154,6 +155,10 @@ function BuildXML ($API_MessageType, $API_SourceID, $OrderID, $TicketStack)
 		<MessageType>' . $API_MessageType . '</MessageType>
 		<SourceID>' . $API_SourceID . '</SourceID>
 		<TimeStamp>' . $API_TimeStamp . '</TimeStamp>
+		<Authorize>
+			<Username>' . $eGalaxy_Username . '</Username>
+			<Password>' . $eGalaxy_Password . '</Password>
+		</Authorize>
 	</Header>';
 
 	if ($API_MessageType == "QueryServerStatus")		// Body for QueryServerStatus call
@@ -344,23 +349,32 @@ function ParseXML ($XML_Object, $TimeZone, $Today, $Email, $CheckStack)
 	                $Ticket['TourDate'] = (string) $product->EventStartDate;        // ('StartDateTime' = blank)
 	            }
 
-				$_SESSION['TicketQuantity']++;		// Keep track of the number of tickets (rows) in this order
+				// PrintTicket flag check - if PrintTicket flag exists and is set to "NO", ticket should not be printed
+				if ($product->PrintTicket == "NO")
+				{
+					if ($GLOBALS['debug'] == 1)
+						echo '<p style="color: Orange;">' . $product->VisualID .  ' [' . $Ticket['Type'] . '] : ' . $product->ItemDescription . ' with flag <code>PrintTicket = "NO"</code> <em>--skipping</em></p>';
+				}
+				else
+				{
+					$_SESSION['TicketQuantity']++;		// Keep track of the number of tickets (rows) in this order
 
-				// Load the rest of the data from the query
-		           $Ticket['Description'] = (string) $product->ItemDescription;
-		           $Ticket['VisualID'] = (string) $product->VisualID;
-		           $Ticket['Name'] = $product->Guest->FirstName . " " . $product->Guest->LastName;
+					// Load the rest of the data from the query
+		            $Ticket['Description'] = (string) $product->ItemDescription;
+		            $Ticket['VisualID'] = (string) $product->VisualID;
+		            $Ticket['Name'] = $product->Guest->FirstName . " " . $product->Guest->LastName;
 
-				if ($GLOBALS['debug'] == 1)                 // Debug: Show data parsed from the query
-					ShowTicketData ($Ticket);
+		            if ($GLOBALS['debug'] == 1)                 // Debug: Show data parsed from the query
+						ShowTicketData ($Ticket);
 
-				// Put all the ticket/item data in the order into one 2D array called $TicketStack
-				// (Each $Ticket will go into $TicketStack as an element).
-				// If there is already data in $TicketStack, push the next array onto it.
-				if (isset ($TicketStack))	// If there's already data in the stack, push the next array onto it.
-					array_push ($TicketStack, $Ticket);
-				else		// If not, seed the mother array ($TicketStack) with the current array's data
-					$TicketStack[1] = $Ticket;
+					// Put all the ticket/item data in the order into one 2D array called $TicketStack
+					// (Each $Ticket will go into $TicketStack as an element).
+					// If there is already data in $TicketStack, push the next array onto it.
+					if (isset ($TicketStack))	// If there's already data in the stack, push the next array onto it.
+						array_push ($TicketStack, $Ticket);
+					else		// If not, seed the mother array ($TicketStack) with the current array's data
+						$TicketStack[1] = $Ticket;
+				}
 			}
 
 			if ($GLOBALS['debug'] == 1)         // Debug: Show entire $TicketStack array
@@ -668,6 +682,28 @@ function NoIssuedTicketsCheck ()
 }
 
 
+// Exits if there are unsupported tickets on the order
+function UnsupportedTicketsCheck ($UnsupportedTickets, $TicketStack)
+{
+	if ($GLOBALS['debug'] == 1)							// Debug: Show section header
+		echo '<h3>Unsupported Tickets Check</h3>';
+
+	foreach ($TicketStack as $index=>$Ticket)
+	{
+		if (in_array($Ticket['Description'], $UnsupportedTickets))
+		{
+			if ($GLOBALS['debug'] == 1)
+				echo '<span style="color: Crimson;">Unsupported Ticket Found: ' . $Ticket['Description'] . '</span><br>';
+
+			echo '<p>Sorry, ' . $Ticket['Description'] . ' tickets are not currently avaliable for Apple Wallet.</p>';
+			TheEnd ();
+		}
+	}
+	if ($GLOBALS['debug'] == 1)
+		echo '<span style="color: green;">No unsupported tickets found</span><hr>';
+}
+
+
 // Prunes exipred tickets from the Ticket Stack
 function Expire ($TicketStack, $Today)
 {
@@ -722,8 +758,60 @@ function StackCheck ($TicketStack)
 		if ($GLOBALS['debug'] == 1)
 			echo '<span style="color: green;">$TicketStack is not empty</span><br>';
 
-	if ($GLOBALS['debug'] == 1)		// Debug: Show section header
+	if ($GLOBALS['debug'] == 1)		// Debug: Show ticket stack
 		ShowTicketStack ($TicketStack);
+
+	return ($TicketStack);
+}
+
+
+// Checks Guest Names for blanks + If Guest Names are disabled, adds Ticket Numbers to orders with multiple tickets
+function CheckNames ($TicketStack, $GuestNames)
+{
+	if ($GLOBALS['debug'] == 1)		// Debug: Show section header
+		echo '<h3>Guest Names Check</h3>';
+
+	$Changes = 0;		// Flip if we change anything (for debug reporting)
+	$EventTickets = 0;	// Keep track of how many event-only tickets there are
+
+	foreach ($TicketStack as $index=>$Ticket)
+		if ($Ticket['Type'] == "Ticket")		// See how many event tickets there are on this order
+			$EventTickets++;
+
+		if (strlen ($Ticket['Name']) < 2)	// Check for an empty string (Sorry, isset(), empty(), == '' weren't doing it!)
+		{
+			$TicketStack[$index]['Name'] = $Ticket['Description'];
+			$Changes++;
+
+			if ($GLOBALS['debug'] == 1)		// Debug: Show patched ticket name
+				echo '<span style="color: orange;">Blank Name Found, </span><span style="color: green;">patching with \'' . $Ticket['Description'] . '\'</span>';
+		}
+
+	if ($EventTickets > 1 && $GuestNames == 0)
+	{
+		if ($GLOBALS['debug'] == 1)		// Debug: Show total number of event tickets
+			echo '<p style="color: orange;">Guest Names disabled and multiple tickets found; <span style="color: green;">Enumerating <span style="color: blue;">' . $EventTickets . '</span> Tickets</span></p>';
+
+		foreach ($TicketStack as $index=>$Ticket)
+		{
+			if ($Ticket['Type'] == "Ticket")
+			{
+				$TicketStack[$index]['Name'] = $Ticket['Name'] . " (Ticket " . $index . ")";
+				$Changes++;
+			}
+
+			if ($GLOBALS['debug'] == 1)
+				ShowTicketData ($TicketStack[$index]);	// Debug: Show ticket data
+		}
+	}
+
+	if ($GLOBALS['debug'] == 1)						// Debug: Report if no changes and show stack
+	{
+		if ($Changes == 0)
+			echo '<span style="color: green;">Names look good - no changes required!</span><br>';
+
+		ShowTicketStack ($TicketStack);
+	}
 
 	return ($TicketStack);
 }
