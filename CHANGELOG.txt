@@ -1,3 +1,16 @@
+2.1 - October 25th, 2022
+------------------------
++ Support for unsupported tickets 😂 (config.php)
++ Support for Galaxy PrintTicket flag
++ Support no guest names
++ Support for eGalaxy servers requiring <Authorize> with each call (config.php)
+f Checks for tickets with blank guest name and fills it in with the event's name
+f Optimized XML formatting
+f Significantly improved debug output (cleaner formatting)
+f Locks ticket time to Pacific time zone instead of relative to user's location
+  ("ignoresTimeZone": true)
+
+
 2.0 - May 23rd, 2018
 --------------------
 + Rewritten to utilize eGalaxy API

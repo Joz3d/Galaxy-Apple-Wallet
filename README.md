@@ -60,7 +60,7 @@ Installation Instructions
    Also place your Apple Developer pass signing certificate (.p12 file) in `Outside_Web_Root`.
 
 
-3. Place your Apple WWDR intermediate certificate (`wwdr.pem`) into this app root folder, where this README.md file and the .php files are.
+3. Place your Apple WWDR intermediate certificate (`AppleWWDRCAxx.pem`) into this app root folder, where this README.md file and the .php files are.
 
 
 4. Place all files into a folder on the web server with write privileges (this app creates temp folders/files), apart from those files in the `Outside_Web_Root` folder.  You can rename 'Outside_Web_Root' if you'd like, but place it outside of your web root, so that it is not publicly accessible or otherwise accessible to your web server.  Update the location of the `Outside_Web_root` folder near the top of `loadpass.php` and `getpass.php`, updating the line:

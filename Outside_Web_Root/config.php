@@ -13,19 +13,30 @@ $conn_method = 'api';
 // API Credentials
 $SOAP_URL = 'https://your.egalaxy.server.com';
 $API_SourceID = 'Website';
+$eGalaxy_Username = 'Website';
+$eGalaxy_Password = '##########';
 
 // DB Credentials
 $server = 'server.address.com\SQLinstance';
 $db = 'Database_Name';
-$username = 'gxuser';
+$username = 'wallet';
 $password = '##########';
 
 // Apple Credentials
 $PassTypeID = 'pass.com.yourco.attraction';
 $TeamID = '##########';
 $CertLocPass = 'Outside_Web_Root/YourPassSigningCertificateGoesInHere.p12';
-$CertLocWWDR = 'wwdr.pem';
+$CertLocWWDR = 'AppleWWDRCAG6.pem';
 $AppleCertPass = '##########';
+
+
+// VARIOUS SETTINGS
+
+// Unsupported Tickets - Tickets to exclude from Wallet eligibility, by Galaxy DESCRIPTION value
+$UnsupportedTickets = array ("");
+
+// Guest Names
+$GuestNames = 0;
 
 
 // PASS INFO
@@ -36,11 +47,11 @@ $TicketDescription = "Tour Ticket for Your Attraction";
 $ItemDescription = "Item for Your Attraction";
 
 // Location Coordinates
-$TicketLongitude = -118.336610;
-$TicketLatitude = 34.151960;
+$TicketLongitude = -118.336413;
+$TicketLatitude = 34.151183;
 
-$ItemLongitude = -118.336755;
-$ItemLatitude = 34.147655;
+$ItemLongitude = -118.336800;
+$ItemLatitude = 34.147777;
 
 // Backside Info
 $Website = "http://yoursite.com";
@@ -60,9 +71,9 @@ function SetGraphics ($Description)		// Ignore this line (do not modify!)
 	{
 		case 'Official Guidebook':
 			// Set pass colors
-			$foregroundColor = "rgb(255, 255, 255)";
-			$backgroundColor = "rgb(206, 62, 62)";
-			$labelColor = "rgb(215, 215, 215)";
+			$foregroundColor = "rgb(0, 0, 0)";
+			$backgroundColor = "rgb(255, 255, 255)";
+			$labelColor = "rgb(130, 130, 130)";
 
 			$GraphicsPath = "gfx/Guidebook/";
 			break;
@@ -75,6 +86,7 @@ function SetGraphics ($Description)		// Ignore this line (do not modify!)
 			$GraphicsPath = "gfx/Photo+Video/";
 			break;
 
+		case 'Deluxe Tour':
 		case 'DELUXE TOUR':
 			$foregroundColor = "rgb(255, 255, 255)";
 			$backgroundColor = "rgb(173, 140, 86)";
@@ -83,7 +95,7 @@ function SetGraphics ($Description)		// Ignore this line (do not modify!)
 			$GraphicsPath = "gfx/Ticket/";
 			break;
 
-		default: // (Regular Tour)
+		default: // (Standard Tour)
 			$foregroundColor = "rgb(255, 255, 255)";
 			$backgroundColor = "rgb(138, 42, 43)";
 			$labelColor = "rgb(215, 215, 215)";

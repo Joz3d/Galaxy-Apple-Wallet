@@ -1,7 +1,7 @@
 <?php
 // Receives requested ticket info, validates it, and returns a PKPass :)
 // by Luke Jozwiak
-// Last Update: 10 Apr 2018
+// Last Update: 25 Oct 2022
 
 setlocale (LC_MONETARY, 'en_US');
 require '../Outside_Web_Root/config.php';
@@ -165,6 +165,7 @@ function TicketJSON ($pass, $TicketNumber, $PassTypeID, $TeamID, $TicketLongitud
 	                "key": "tour-date",
 	                "label": "Time",
 	                "timeStyle": "PKDateStyleShort",
+					"ignoresTimeZone": true,
 	                "value": "' . $_SESSION['AllTickets'][$TicketNumber]['TourDate'] . '"
 	            }
 	        ],

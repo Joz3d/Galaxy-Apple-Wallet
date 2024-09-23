@@ -1,6 +1,6 @@
-Galaxy Apple Wallet v2.0
+Galaxy Apple Wallet v2.1
 by Luke Jozwiak (lukejoz at the most popular email service)
-Last Updated: 23 May 2018
+Last Updated: 25 October 2022
 
 1. About
 2. Requirements
@@ -71,8 +71,8 @@ Apple Wallet Pass Graphics
    Also place your Apple Developer pass signing certificate (.p12 file) in 'Outside_Web_Root'.
 
 
-3. Place your Apple WWDR intermediate certificate (wwdr.pem) into this app root folder, where this
-   README.txt file and the .php files are.
+3. Place your Apple WWDR intermediate certificate (AppleWWDRCAxx.pem) into this app root folder,
+   where this README.txt file and the .php files are.
 
 
 4. Place all files into a folder on the web server with write privileges (this app creates temp
