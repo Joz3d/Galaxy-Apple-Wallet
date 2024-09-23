@@ -139,4 +139,3 @@ Apple Wallet Pass Graphics
 If you are having trouble or just want to see what is happening under the hood, there is fairly
 extensive debugging available by setting the 'debug' variables to "1", near the top of loadpass.php
 and getpass.php
-
